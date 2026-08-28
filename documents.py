@@ -56,7 +56,7 @@ def create_act_docx(action_type: str, doc_number: str, date_str: str,
     table.style = "Table Grid"
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
 
-    widths = [Cm(1.2), Cm(3.2), Cm(5.0), Cm(5.0), Cm(3.4)]
+    widths = [Cm(1.0), Cm(3.4), Cm(5.0), Cm(5.0), Cm(3.4)]
     headers = ["№ п/п", "Инв. номер", "Наименование", "Количество, шт", "Примечание"]
 
     hdr_cells = table.rows[0].cells

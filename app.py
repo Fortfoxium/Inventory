@@ -23,7 +23,8 @@ import os
 import datetime
 import tkinter as tk
 from tkinter import ttk, messagebox, scrolledtext
-
+import sys
+import subprocess
 from PIL import ImageTk
 
 import storage
@@ -38,6 +39,20 @@ DOCS_DIR = os.path.join(BASE_DIR, "documents")
 ACTIONS = ["Списание", "Передача", "Установка"]
 STATUS_BY_ACTION = {"Списание": "Списан", "Передача": "Передан", "Установка": "Установлен"}
 
+def open_file(path: str) -> None:
+    """Открывает файл в программе по умолчанию (Windows/macOS/Linux)."""
+    try:
+        if sys.platform.startswith("win"):
+            os.startfile(path)
+        elif sys.platform == "darwin":
+            subprocess.run(["open", path], check=False)
+        else:
+            subprocess.run(["xdg-open", path], check=False)
+    except Exception as exc:
+        messagebox.showwarning(
+            "Не удалось открыть файл",
+            f"Документ сохранён, но открыть автоматически не получилось:\n{exc}\n\nПуть:\n{path}"
+        )
 
 class App(tk.Tk):
     def __init__(self):
@@ -265,7 +280,23 @@ class App(tk.Tk):
         updated = storage.update_status(
             DB_PATH, [r["barcode"] for r in self.queue], STATUS_BY_ACTION[action]
         )
+        try:
+            documents.create_act_docx(
+                action_type=action,
+                doc_number=doc_number or "-",
+                date_str=date_str,
+                items=self.queue,
+                output_path=path,
+            )
+        except Exception as exc:
+            messagebox.showerror("Ошибка формирования документа", str(exc))
+            return
 
+        open_file(path)   # ← открывает документ сразу после сохранения
+
+        updated = storage.update_status(
+            DB_PATH, [r["barcode"] for r in self.queue], STATUS_BY_ACTION[action]
+        )
         messagebox.showinfo(
             "Готово",
             f"Документ сохранён:\n{path}\n\nОбновлено записей в базе: {updated}"
