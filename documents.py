@@ -46,7 +46,7 @@ def create_act_docx(action_type: str, doc_number: str, date_str: str,
     p = doc.add_paragraph()
     p.paragraph_format.first_line_indent = Mm(10)
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-    p.add_run("Комиссия в составе: председателя комиссии Силанова А.А. – Заместителя ген.директора; членов комиссии: Кисилевой Л.М. – экономиста, Батуро А.П - бухгалтера, Полищук Р.Ю..-начальник ИТО, составила настоящий Акт в том, что на __________________________________ были установлены:")
+    p.add_run("Комиссия в составе: председателя комиссии Силанова А.А. – Заместителя ген. директора; членов комиссии: Кисилевой Л.М. – экономиста, Батуро А.П - бухгалтера, Полищук Р.Ю. - начальник ИТО, составила настоящий Акт в том, что на __________________________________ были установлены:")
     
 
     doc.add_paragraph()
@@ -81,12 +81,13 @@ def create_act_docx(action_type: str, doc_number: str, date_str: str,
     doc.add_paragraph()
 
     sign = doc.add_paragraph()
-    sign.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+    sign.alignment = WD_ALIGN_PARAGRAPH.LEFT
     
 
-    sign.add_run("Председатель комиссии:						          Силанов А.А.\n")
-    sign.add_run("Члены комиссии:         	                                                                      Киселева Л.М.\n")
-    sign.add_run("               	                                                                                              Батуро А.П.\n")
-    sign.add_run("               	                                                                                              Полищук Р.Ю.\n")
-
+    sign.add_run("Начальник ИТО:					_________ Полищук Р.Ю.\n")
+    sign.add_run("Системный администратор:         	                        _________ Антипин В.Д.\n")
+    sign.add_run("Заместитель ген. Директора                                    _________ Силанов А.А.\n")
+    sign.add_run("Бухгалтер        	                                               _________ Батуро А.П.\n")
+    sign.add_run("Экономист       	                                               _________ Кисилева Л.М.\n")
+  
     doc.save(output_path)
